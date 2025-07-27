@@ -1,31 +1,37 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 project(warehouse_simulation)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  std_msgs
+# Align to ROS2 Jazzy https://docs.ros.org/en/jazzy/The-ROS2-Project/Contributing/Code-Style-Language-Versions.html#id2
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# generate a compile_commands.json file for tools like clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# === Dependencies ===
+find_package(ament_cmake REQUIRED)
+
+set(dep_pkgs
+  ament_cmake
+  rclcpp
+  geometry_msgs)
+
+# === Install ===
+install(DIRECTORY
+  launch
+  models
+  worlds
+  DESTINATION share/${PROJECT_NAME}/
 )
 
-
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES beginner_tutorials
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
-)
-
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
-)
-
-
-add_executable(key_control src/key_control.cpp)
-target_link_libraries(key_control ${catkin_LIBRARIES})
+ament_package()
