@@ -21,11 +21,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # === Dependencies ===
 find_package(ament_cmake REQUIRED)
 
-set(dep_pkgs
-  ament_cmake
-  rclcpp
-  geometry_msgs)
-
 # === Install ===
 install(DIRECTORY
   launch
